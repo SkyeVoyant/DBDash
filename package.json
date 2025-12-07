@@ -1,0 +1,22 @@
+{
+  "name": "dbdash",
+  "version": "1.0.0",
+  "description": "Database Dashboard - Universal SQL Database Browser",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev:frontend": "pnpm --filter dbdash-frontend dev",
+    "dev:backend": "pnpm --filter dbdash-backend dev",
+    "build:frontend": "pnpm --filter dbdash-frontend build",
+    "start:backend": "pnpm --filter dbdash-backend start"
+  },
+  "pnpm": {
+    "node-linker": "hoisted",
+    "shamefully-hoist": true
+  }
+}
+

@@ -1,0 +1,9 @@
+services:
+  dbdash:
+    build: .
+    container_name: DBDash
+    restart: unless-stopped
+    env_file:
+      - .env
+    network_mode: host
+    command: sh -c "cd /app/backend && node server.js & cd /app && node serve-frontend.js"
