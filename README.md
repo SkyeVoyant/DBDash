@@ -2,6 +2,8 @@
 
 A simple, modern, universal SQL database browser with an Excel-style interface. Browse and edit data from PostgreSQL, MySQL, and SQL Server databases all in one place.
 
+<img width="2512" height="1328" alt="Opera Snapshot_2025-12-07_021546_localhost" src="https://github.com/user-attachments/assets/6354e591-6dcb-43a8-8408-a5508356f40a" />
+
 ## Features
 
 - **Multi-Database Support**: PostgreSQL, MySQL, MariaDB, and SQL Server
