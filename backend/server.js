@@ -28,10 +28,18 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS configuration - restrict to localhost frontend
+// CORS configuration
+// Supports both local dev and Cloudflare Tunnel hostnames via CORS_ORIGIN.
+// Example: CORS_ORIGIN=https://panel.skyecord.app,http://localhost:5160
 const FRONTEND_PORT = process.env.FRONTEND_PORT || '8888';
+const corsOriginRaw = process.env.CORS_ORIGIN || `http://localhost:${FRONTEND_PORT}`;
+const corsOrigins = corsOriginRaw
+  .split(',')
+  .map((value) => value.trim())
+  .filter(Boolean);
+
 const corsOptions = {
-  origin: [`http://localhost:${FRONTEND_PORT}`],
+  origin: corsOrigins,
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -70,4 +78,3 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 DBDash Backend running on http://0.0.0.0:${PORT}`);
   console.log(`📊 Managing ${dbManager.getConnectionCount()} database connections`);
 });
-

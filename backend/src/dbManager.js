@@ -221,12 +221,21 @@ class DBManager {
 
         case 'mssql':
         case 'sqlserver':
-          // SQL Server creates connection per query
-          const pool = await sql.connect(connection.config);
-          const result = await pool.request()
-            .query(sqlQuery);
-          await pool.close();
-          return { rows: result.recordset, rowCount: result.rowsAffected[0] || 0 };
+          // SQL Server uses short-lived pools to avoid shared global pool state.
+          {
+            const pool = new sql.ConnectionPool(connection.config);
+            await pool.connect();
+            try {
+              const request = pool.request();
+              params.forEach((value, index) => {
+                request.input(`p${index + 1}`, value);
+              });
+              const result = await request.query(sqlQuery);
+              return { rows: result.recordset || [], rowCount: result.rowsAffected?.[0] || 0 };
+            } finally {
+              await pool.close();
+            }
+          }
 
         default:
           throw new Error(`Unsupported database type: ${type}`);
@@ -369,4 +378,3 @@ class DBManager {
 }
 
 export const dbManager = new DBManager();
-

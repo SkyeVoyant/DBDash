@@ -7,6 +7,15 @@ const router = express.Router();
 const loginAttempts = new Map();
 const MAX_ATTEMPTS = 5;
 const WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const MAX_TRACKED_IPS = 10000;
+
+function pruneExpiredAttempts(now) {
+  for (const [ip, attempts] of loginAttempts.entries()) {
+    if ((attempts?.resetTime || 0) <= now) {
+      loginAttempts.delete(ip);
+    }
+  }
+}
 
 router.post('/login', (req, res) => {
   const { password } = req.body;
@@ -25,6 +34,11 @@ router.post('/login', (req, res) => {
   // Rate limiting: track login attempts by client IP address
   const clientIp = req.ip || req.socket?.remoteAddress || 'unknown';
   const now = Date.now();
+
+  if (loginAttempts.size >= MAX_TRACKED_IPS) {
+    pruneExpiredAttempts(now);
+  }
+
   const attempts = loginAttempts.get(clientIp) || { count: 0, resetTime: now + WINDOW_MS };
 
   if (attempts.resetTime < now) {
@@ -78,4 +92,3 @@ router.get('/verify', (req, res) => {
 });
 
 export { router as authRoutes };
-
