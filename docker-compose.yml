@@ -1,6 +1,9 @@
 services:
   dbdash:
-    build: .
+    build:
+      context: .
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://panel2.skyecord.app}
     container_name: DBDash
     restart: unless-stopped
     env_file:

@@ -18,6 +18,8 @@ RUN pnpm run build || true
 # Frontend stage
 FROM node:20-alpine AS frontend-builder
 RUN corepack enable && corepack prepare pnpm@latest --activate
+ARG VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
 WORKDIR /app
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY frontend/package.json ./frontend/
